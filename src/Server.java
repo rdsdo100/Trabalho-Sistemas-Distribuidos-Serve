@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Server {
 
-    List<PrintWriter> escritores = new ArrayList<>();
+    List<PrintWriter> escritores = new ArrayList<>(); //armazena todos os textos que serão enviados aos clientes
 
     Scanner scanner;
 
@@ -19,8 +19,8 @@ public class Server {
             while (true) { //monitora contanteemente essa porta
                 Socket socket = serverSocket.accept(); //fica aguardando respostas do cliente
                 new Thread(new EscutaCliente(socket)).start();// cria uma tread para cada cliente
-                PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-                escritores.add(printWriter);
+                PrintWriter printWriter = new PrintWriter(socket.getOutputStream()); // recupera as menssagens do cliente
+                escritores.add(printWriter); // add a lista de clientes
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -29,10 +29,10 @@ public class Server {
     }
 
     private void encaminharParaTodos(String texto){
-        for (PrintWriter printWriter : escritores){
+        for (PrintWriter printWriter : escritores){ //percorre a lista e para cada printwriter.
             try{
-                printWriter.println(texto);
-                printWriter.flush();
+                printWriter.println(texto); // envia as menssagens
+                printWriter.flush(); // garante o envio de menssagens
             }catch (Exception e){}
         }
     }
@@ -54,7 +54,7 @@ public class Server {
             try {
                 String texto;
                 while ((texto = scanner.nextLine()) != null) { //monitora o que o cliente esta digitando
-                    System.out.println("Rcecebeu: " + texto); //teste para escrever no terminal do servidor
+                    System.out.println(texto); //teste para escrever no terminal do servidor
                     encaminharParaTodos(texto); //encaminha as menssagens para os clientes
 
                 }
